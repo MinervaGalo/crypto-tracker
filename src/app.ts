@@ -5,6 +5,7 @@ const app = express();
 
 app.use(express.json());
 
+// Проверка работоспособности сервера
 app.get('/status', (req, res) => {
   res.status(200).json({
     status: 'OK',
@@ -12,6 +13,7 @@ app.get('/status', (req, res) => {
   });
 });
 
+// Маршруты для криптовалют
 app.use('/api/cryptocurrencies', cryptoRoutes);
 
 export default app;

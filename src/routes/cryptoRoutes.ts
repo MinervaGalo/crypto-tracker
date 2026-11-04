@@ -3,11 +3,13 @@ import * as cryptoRepository from '../repositories/cryptoRepository.js';
 
 const router = Router();
 
+// Получить все криптовалюты
 router.get('/', (req, res) => {
   const cryptocurrencies = cryptoRepository.findAll();
   res.status(200).json(cryptocurrencies);
 });
 
+// Получить криптовалюту по ID
 router.get('/:id', (req, res) => {
   const id = Number(req.params.id);
 
@@ -26,6 +28,7 @@ router.get('/:id', (req, res) => {
   res.status(200).json(cryptocurrency);
 });
 
+// Добавить криптовалюту
 router.post('/', (req, res) => {
   const { cmcId, symbol, name } = req.body;
 
@@ -49,6 +52,7 @@ router.post('/', (req, res) => {
   }
 });
 
+// Обновить данные криптовалюты
 router.put('/:id', (req, res) => {
   const id = Number(req.params.id);
   const { symbol, name } = req.body;
@@ -79,6 +83,7 @@ router.put('/:id', (req, res) => {
   res.status(200).json({ message: 'Cryptocurrency updated' });
 });
 
+// Удалить криптовалюту
 router.delete('/:id', (req, res) => {
   const id = Number(req.params.id);
 

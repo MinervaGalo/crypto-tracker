@@ -38,6 +38,7 @@ export function create(
   return Number(result.lastInsertRowid);
 }
 
+// Удалить криптовалюту
 export function remove(id: number): boolean {
   const result = db.prepare(`
     DELETE FROM cryptocurrencies
@@ -46,7 +47,8 @@ export function remove(id: number): boolean {
 
   return result.changes > 0;
 }
- 
+
+// Обновить данные криптовалюты
 export function update(
   id: number,
   symbol: string,
