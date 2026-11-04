@@ -37,3 +37,26 @@ export function create(
 
   return Number(result.lastInsertRowid);
 }
+
+export function remove(id: number): boolean {
+  const result = db.prepare(`
+    DELETE FROM cryptocurrencies
+    WHERE id = ?
+  `).run(id);
+
+  return result.changes > 0;
+}
+ 
+export function update(
+  id: number,
+  symbol: string,
+  name: string
+): boolean {
+  const result = db.prepare(`
+    UPDATE cryptocurrencies
+    SET symbol = ?, name = ?
+    WHERE id = ?
+  `).run(symbol, name, id);
+
+  return result.changes > 0;
+}
