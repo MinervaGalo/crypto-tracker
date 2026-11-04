@@ -1,0 +1,8 @@
+node_modules/
+dist/
+
+.env
+
+crypto-tracker.db
+crypto-tracker.db-shm
+crypto-tracker.db-wal
