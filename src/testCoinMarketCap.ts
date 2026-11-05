@@ -1,23 +1,24 @@
 import 'dotenv/config';
-import { getLatestQuotes } from './services/coinMarketCapService.js';
+import { updatePrices } from './services/priceService.js';
+import * as priceHistoryRepository from './repositories/priceHistoryRepository.js';
+import * as cryptoRepository from './repositories/cryptoRepository.js';
 
-async function testCoinMarketCap() {
+async function testPriceUpdate() {
   try {
-    const result = await getLatestQuotes([1, 1027]);
+    const savedCount = await updatePrices();
 
-    for (const crypto of result.data) {
-      const usdQuote = crypto.quote[0];
+    console.log(`Сохранено новых цен: ${savedCount}`);
 
-      console.log({
-        name: crypto.name,
-        symbol: crypto.symbol,
-        price: usdQuote.price,
-        lastUpdated: usdQuote.last_updated
-      });
+    const cryptocurrencies = cryptoRepository.findAll();
+
+    for (const crypto of cryptocurrencies) {
+      const history = priceHistoryRepository.findByCryptocurrencyId(crypto.id);
+
+      console.log(`${crypto.name}:`, history[0]);
     }
   } catch (error) {
-    console.error('CoinMarketCap API error:', error);
+    console.error('Price update error:', error);
   }
 }
 
-testCoinMarketCap();
+testPriceUpdate();
