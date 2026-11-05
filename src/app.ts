@@ -1,4 +1,5 @@
 import express from 'express';
+import { apiKeyAuth } from './middleware/apiKeyAuth.js';
 import cryptoRoutes from './routes/cryptoRoutes.js';
 import priceRoutes from './routes/priceRoutes.js';
 
@@ -13,6 +14,8 @@ app.get('/status', (req, res) => {
     message: 'Crypto Tracker API is running'
   });
 });
+
+app.use('/api', apiKeyAuth);
 
 // Маршруты для криптовалют
 app.use('/api/cryptocurrencies', cryptoRoutes);
