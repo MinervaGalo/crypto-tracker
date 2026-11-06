@@ -6,3 +6,7 @@ dist/
 crypto-tracker.db
 crypto-tracker.db-shm
 crypto-tracker.db-wal
+
+crypto-tracker-test.db
+crypto-tracker-test.db-shm
+crypto-tracker-test.db-wal

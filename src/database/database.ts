@@ -1,7 +1,7 @@
 import Database from 'better-sqlite3';
 import path from 'node:path';
 
-const dbPath = path.join(process.cwd(), 'crypto-tracker.db');
+const dbPath = process.env.DB_PATH || path.join(process.cwd(), 'crypto-tracker.db');
 
 const db = new Database(dbPath);
 
