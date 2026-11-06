@@ -1,5 +1,8 @@
 import path from 'node:path';
 import request from 'supertest';
+import { getLatestQuotes } from '../dist/services/coinMarketCapService.js';
+import axios from 'axios';
+import AxiosMockAdapter from 'axios-mock-adapter';
 
 process.env.DB_PATH = path.join(process.cwd(), 'crypto-tracker-test.db');
 process.env.API_ACCESS_KEY = 'test-api-key';
@@ -293,7 +296,53 @@ describe('API tests', () => {
         expect(response.status).toBe(400);
     });
 
-  
+
+});
+
+
+describe('CoinMarketCap tests', () => {
+  test('Ошибка, если API-ключ отсутствует', async () => {
+    delete process.env.CMC_API_KEY;
+
+    await expect(getLatestQuotes([1]))
+      .rejects.toThrow('CoinMarketCap API key is missing');
+  });
+
+  test('Ошибка при неправильном API-ключе CoinMarketCap', async () => {
+    process.env.CMC_API_KEY = 'invalid-key';
+
+    const mock = new AxiosMockAdapter(axios);
+
+    mock.onGet(/coinmarketcap\.com/).reply(401);
+
+    await expect(getLatestQuotes([1]))
+        .rejects.toThrow('Invalid CoinMarketCap API key');
+
+    mock.restore();
+  });
+
+  test('Ошибка при превышении лимита запросов CoinMarketCap', async () => {
+    const mock = new AxiosMockAdapter(axios);
+
+    mock.onGet(/coinmarketcap\.com/).reply(429);
+
+    await expect(getLatestQuotes([1]))
+        .rejects.toThrow('CoinMarketCap rate limit exceeded');
+
+    mock.restore();
+    });
+
+    test('Ошибка при сбое CoinMarketCap', async () => {
+    const mock = new AxiosMockAdapter(axios);
+
+    mock.onGet(/coinmarketcap\.com/).reply(500);
+
+    await expect(getLatestQuotes([1]))
+        .rejects.toThrow('CoinMarketCap API error: 500');
+
+    mock.restore();
+  });
+
 
 
 });
