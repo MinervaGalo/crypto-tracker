@@ -77,6 +77,20 @@ describe('API tests', () => {
     expect(response.status).toBe(400);
   });
 
+  test('POST /api/cryptocurrencies — ошибка при неправильном типе данных', async () => {
+    const response = await request(app)
+      .post('/api/cryptocurrencies')
+      .set('Authorization', 'Bearer test-api-key')
+      .send({
+        cmcId: '1',
+        symbol: 'BTC',
+        name: 'Bitcoin'
+      });
+
+    expect(response.status).toBe(400);
+  });
+
+
   test('POST /api/cryptocurrencies — ошибка при дубликате', async () => {
     const crypto = {
       cmcId: 1,
@@ -199,6 +213,18 @@ describe('API tests', () => {
       .put('/api/cryptocurrencies/1')
       .set('Authorization', 'Bearer test-api-key')
       .send({});
+
+    expect(response.status).toBe(400);
+  });
+
+  test('PUT /api/cryptocurrencies/:id — ошибка при неправильном типе данных', async () => {
+    const response = await request(app)
+      .put('/api/cryptocurrencies/1')
+      .set('Authorization', 'Bearer test-api-key')
+      .send({
+        symbol: 123,
+        name: 'Bitcoin'
+      });
 
     expect(response.status).toBe(400);
   });
