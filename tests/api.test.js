@@ -343,6 +343,29 @@ describe('CoinMarketCap tests', () => {
     mock.restore();
   });
 
+  
+  test('Ошибка при превышении времени ожидания CoinMarketCap', async () => {
+    const mock = new AxiosMockAdapter(axios);
+
+    mock.onGet(/coinmarketcap\.com/).timeout();
+
+    await expect(getLatestQuotes([1]))
+      .rejects.toThrow('CoinMarketCap request timed out');
+
+    mock.restore();
+  });
+
+  test('Ошибка при потере соединения с CoinMarketCap', async () => {
+    const mock = new AxiosMockAdapter(axios);
+
+    mock.onGet(/coinmarketcap\.com/).networkError();
+
+    await expect(getLatestQuotes([1]))
+      .rejects.toThrow('CoinMarketCap is unavailable');
+
+    mock.restore();
+  });
+
 
 
 });
